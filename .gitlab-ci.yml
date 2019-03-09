@@ -1,0 +1,45 @@
+# Before Script
+before_script:
+  - cp .env.dusk.testing .env
+  - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+  #check for versions, useful incase something goes wrong
+  - node-sass --version
+  - nginx -v
+
+# Variables
+variables:
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  MYSQL_DATABASE: homestead
+  DB_HOST: mysql
+  DB_CONNECTION: mysql
+
+test:
+  image: chilio/laravel-dusk-ci:stable
+  services:
+     - mysql:5.7
+  cache:
+    key: ${CI_COMMIT_REF_NAME}
+    paths:
+      - vendor
+      - node_modules
+
+  script:
+    # run frontend compilations
+    - yarn
+    - npm run dev
+    # phpunit things
+    - configure-laravel
+    - ./vendor/phpunit/phpunit/phpunit -v --coverage-text --colors --stderr
+    # dusk
+    #- start-nginx-ci-project
+    #- php artisan dusk --colors --debug
+
+  artifacts:
+    paths:
+      - ./storage/logs # for debugging
+      #- ./tests/Browser/screenshots
+      #- ./tests/Browser/console
+    expire_in: 1 days
+    when: always
