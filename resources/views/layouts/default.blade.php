@@ -31,7 +31,7 @@
 <body class="skin-josh">
 <header class="header">
     <a href="{{ route('dashboard') }}" class="logo">
-        <img src="{{ asset('img/logo.png') }}" alt="logo">
+        <img src="{{ asset('img/neptuno_logo2.png') }}" alt="logo" style="width:30%; height:100%;margin-left: 0px;margin-right: 80%">
     </a>
     <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
